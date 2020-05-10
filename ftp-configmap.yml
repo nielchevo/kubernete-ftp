@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    labels:
+        app: ftp-server
+        name: ftp-server
+    name: ftp-server
+    namespace: default
+data:
+    FTP_USER: "bob"
+    FTP_PASS: "123456"
+    PASV_ADDRESS: "172.18.0.5"
+    PASV_MIN_PORT: "31100"
+    PASV_MAX_PORT: "31110"

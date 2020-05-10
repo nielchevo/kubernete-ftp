@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: ftp-server
+    labels:
+        app: ftp-server
+        name: ftp-server
+        role: http
+spec:
+    strategy:
+        rollingUpdate:
+            maxSurge: 30%
+            maxUnavailable: 30%
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ftp-server
+            name: ftp-server
+            role: http
+    minReadySeconds: 20
+    template:
+        metadata:
+            name: ftp-server
+            labels:
+                app: ftp-server
+                name: ftp-server
+                role: http
+        spec:
+            # affinity:
+            #     podAntiAffinity:
+            #         preferredDuringSchedulingIgnoredDuringExecution:
+            #           - weight: 10
+            #             podAffinityTerm:
+            #                 labelSelector:
+            #                     matchExpressions:
+            #                       - key: app
+            #                         operator: In
+            #                         values:
+            #                           - eproc
+            #                 topologyKey: "kubernetes.io/hostname"
+            # volumes:
+            #   - name: config
+            #     configMap:
+            #         name: ftp-server
+            #         items:
+            #           - key: ftp-server-config
+            #             path: ".env"
+            containers:
+              - name: node
+                image: fauria/vsftpd:latest
+                imagePullPolicy: Always
+                envFrom:
+                - configMapRef:
+                    name: ftp-server
+                # volumeMounts:
+                #   - name: config
+                #     mountPath: "/home/ftp-config"
+                ports:
+                  - name: ftp
+                    containerPort: 21
+                    protocol: TCP
+                resources:
+                    limits:
+                      memory: "128Mi"
+                      cpu: "500m"
+                    requests:
+                      memory: "64Mi"
+                      cpu: "250m"
+            imagePullSecrets:
+              - name: docker-secret

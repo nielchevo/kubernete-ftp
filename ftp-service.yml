@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: ftp-server
+    labels:
+        name: ftp-server
+        role: http
+spec:
+    type: NodePort
+    selector:
+        name: ftp-server
+        role: http
+    ports:
+      - name: ftp
+        port: 21
+        targetPort: 21
+        nodePort: 30021
+      
+      
